@@ -3,8 +3,10 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
+	"io/fs"
 	"os"
 	"strings"
 
@@ -19,7 +21,29 @@ var jFlag = flag.Bool("j", false, "output json")
 
 func main() {
 	flag.Parse()
-	scanner := bufio.NewScanner(os.Stdin)
+	var input *os.File
+	fi, _ := os.Stdin.Stat()
+	if (fi.Mode() & os.ModeCharDevice) == 0 {
+		fmt.Println("stdin ist da")
+		input = os.Stdin
+	} else if len(flag.Args()) >= 1 {
+		arg := flag.Args()
+		f, err := os.Open(arg[0])
+		if errors.Is(err, fs.ErrNotExist) {
+			fmt.Printf("file '%s' does not exist.\n", arg[0])
+			os.Exit(1)
+		} else {
+			input = f
+		}
+	} else {
+		fmt.Println("Usage:")
+		fmt.Println("lfpp is a tool to pretty print logfmt from stdin or from a file")
+		fmt.Println("lfpp [-cj] [file]")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
+	scanner := bufio.NewScanner(input)
 	for scanner.Scan() {
 		if *jFlag {
 			fmt.Println(encodeJson(parseInputIntoMap(scanner.Text())))
