@@ -24,7 +24,6 @@ func main() {
 	var input *os.File
 	fi, _ := os.Stdin.Stat()
 	if (fi.Mode() & os.ModeCharDevice) == 0 {
-		fmt.Println("stdin ist da")
 		input = os.Stdin
 	} else if len(flag.Args()) >= 1 {
 		arg := flag.Args()
