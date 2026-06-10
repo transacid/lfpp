@@ -47,7 +47,7 @@ func main() {
 	scanner := bufio.NewScanner(input)
 	for scanner.Scan() {
 		if *jFlag {
-			fmt.Println(encodeJson(parseInputIntoMap(scanner.Text())))
+			fmt.Println(encodeJSON(parseInputIntoMap(scanner.Text())))
 		} else if *cFlag {
 			fmt.Println(colorKV(parseInputIntoStringSlice(scanner.Text())))
 		} else {
@@ -97,7 +97,7 @@ func colorKV(input [][]string) string {
 	return strings.Join(outSlice, " ")
 }
 
-func encodeJson(input map[string]string) string {
+func encodeJSON(input map[string]string) string {
 	j, err := json.Marshal(input)
 	if err != nil {
 		panic(err)
