@@ -14,10 +14,12 @@ import (
 	"github.com/go-logfmt/logfmt"
 )
 
-var keyColor = color.New(color.FgRed).SprintFunc()
-var valueColor = color.New(color.FgGreen).SprintFunc()
-var cFlag = flag.Bool("c", false, "colorize output")
-var jFlag = flag.Bool("j", false, "output json")
+var (
+	keyColor   = color.New(color.FgRed).SprintFunc()
+	valueColor = color.New(color.FgGreen).SprintFunc()
+	cFlag      = flag.Bool("c", false, "colorize output")
+	jFlag      = flag.Bool("j", false, "output json")
+)
 
 func main() {
 	flag.Parse()
@@ -73,7 +75,7 @@ func parseInputIntoStringSlice(input string) [][]string {
 
 func parseInputIntoMap(input string) map[string]string {
 	d := logfmt.NewDecoder(strings.NewReader(input))
-	var outMap = make(map[string]string)
+	outMap := make(map[string]string)
 	for d.ScanRecord() {
 		for d.ScanKeyval() {
 			outMap[string(d.Key())] = string(d.Value())
